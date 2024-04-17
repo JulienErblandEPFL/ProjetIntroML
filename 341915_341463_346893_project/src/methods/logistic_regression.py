@@ -37,24 +37,33 @@ class LogisticRegression(object):
         #### WRITE YOUR CODE HERE!
 
         #initialisation
+        training_labels = label_to_onehot(training_labels)
+
         D = training_data.shape[1]  # number of features
-        C = training_labels.shape[1]  # number of classes
+        C = get_n_classes(training_labels)  # number of classes
         self.weights = np.random.normal(0, 0.1, (D, C))
         
         #gradient descent
         for i in range(self.max_iters):
             #find the gradient and do a gradient step
-            self.gradient = training_data.T@(self.softmax(training_data)-training_labels)  #cross entropy calculation
+            print("Step :",i)
+            print(self.weights)
+            self.gradient = training_data.T@(self.softmax(training_data@self.weights) - training_labels)  #cross entropy calculation
             self.weights = self.weights - self.lr*self.gradient
-             
 
+
+        
         ###
         ##
         return self.predict(training_data)
 
     def softmax(self,data):
+        #version 1 de softmax
+        up = np.exp(data)
+        prob_matrix = up/np.sum(up, axis = 1, keepdims = True)
+        """
+        #version 2 de softmax
         prob_matrix = np.empty((len(data), self.weights.shape[1]))  # Shape: (N, C)
-
         for i in range(len(data)):
             # Calculate scores for each class for the ith data sample
             scores = np.exp(data[i] @ self.weights)  # Shape: (C,)
@@ -64,7 +73,9 @@ class LogisticRegression(object):
             
             # Store probabilities for the ith data sample
             prob_matrix[i] = probabilities
-            
+        """
+        
+
         return prob_matrix
 
     def predict(self, test_data):
@@ -79,8 +90,10 @@ class LogisticRegression(object):
         ##
         ###
         #### WRITE YOUR CODE HERE!
+        print(test_data.shape)
+        print(self.weights.shape)
 
-        probabilities = self.softmax(test_data@self.weights)
+        probabilities = self.softmax(test_data @ self.weights)
         pred_labels = onehot_to_label(probabilities)
     
         ###
