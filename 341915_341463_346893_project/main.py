@@ -37,7 +37,7 @@ def main(args):
     ##TODO: ctrain and ctest are for regression task. (To be used for Linear Regression and KNN)
     ##TODO: xtrain, xtest, ytrain, ytest are for classification task. (To be used for Logistic Regression and KNN)
 
-
+    
 
     ## 2. Then we must prepare it. This is were you can create a validation set,
     #  normalize, add bias, etc.

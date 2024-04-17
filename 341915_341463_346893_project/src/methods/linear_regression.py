@@ -28,10 +28,19 @@ class LinearRegression(object):
         ##
         ###
         #### YOUR CODE HERE!
+
+        #do not forget to normalize in the main
+        #in the main try with and without bias appened to check performance
+
+        regulator = self.lmda*np.eyes(training_data.shape[1])   #for rifge
+        self.weight = np.linalg.inv(training_data.T@training_data + regulator)@training_data.T@training_labels
+
+        # without ridge (with pinv for optimisation)
+        #pred_regression_targets = np.linalg.pinv(training_data)@training_labels
         ###
         ##
 
-        return pred_regression_targets
+        return self.predict(training_data)
 
 
 def predict(self, test_data):
@@ -46,6 +55,7 @@ def predict(self, test_data):
         ##
         ###
         #### YOUR CODE HERE!
+        pred_regression_targets = self.weight.T@test_data
         ###
         ##
 
