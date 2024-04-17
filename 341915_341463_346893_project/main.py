@@ -37,7 +37,7 @@ def main(args):
     ##TODO: ctrain and ctest are for regression task. (To be used for Linear Regression and KNN)
     ##TODO: xtrain, xtest, ytrain, ytest are for classification task. (To be used for Logistic Regression and KNN)
 
-    
+
 
     ## 2. Then we must prepare it. This is were you can create a validation set,
     #  normalize, add bias, etc.
@@ -45,10 +45,14 @@ def main(args):
     # Make a validation set (it can overwrite xtest, ytest)
     if not args.test:
         ### WRITE YOUR CODE HERE
+        
         pass
     
     ### WRITE YOUR CODE HERE to do any other data processing
-
+    means = np.mean(ctrain,0,keepdims=True)
+    std   = np.std(ctrain,0,keepdims=True) 
+    ctrain = normalize_fn(ctrain,means,std)
+    ctest = normalize_fn(ctest,means,std)
     
 
     ## 3. Initialize the method you want to use.
@@ -60,8 +64,11 @@ def main(args):
     # Follow the "DummyClassifier" example for your methods
     if args.method == "dummy_classifier":
         method_obj = DummyClassifier(arg1=1, arg2=2)
-
-    elif ...:  ### WRITE YOUR CODE HERE
+    
+    ### WRITE YOUR CODE HERE
+    elif args.method == "linear_regression":
+        method_obj = LinearRegression(lmda = args.lamda)
+    elif...:
         pass
 
 
