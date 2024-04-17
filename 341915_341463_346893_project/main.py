@@ -49,11 +49,16 @@ def main(args):
         pass
     
     ### WRITE YOUR CODE HERE to do any other data processing
+    
     means = np.mean(ctrain,0,keepdims=True)
     std   = np.std(ctrain,0,keepdims=True) 
     ctrain = normalize_fn(ctrain,means,std)
     ctest = normalize_fn(ctest,means,std)
+
+    ctrain = append_bias_term(ctrain)
+    ctest = append_bias_term(ctest)
     
+
 
     ## 3. Initialize the method you want to use.
 
@@ -67,7 +72,7 @@ def main(args):
     
     ### WRITE YOUR CODE HERE
     elif args.method == "linear_regression":
-        method_obj = LinearRegression(lmda = args.lamda)
+        method_obj = LinearRegression(lmda = args.lmda)
     elif...:
         pass
 
