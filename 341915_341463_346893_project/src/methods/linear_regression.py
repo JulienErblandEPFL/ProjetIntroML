@@ -32,7 +32,7 @@ class LinearRegression(object):
         if self.lmda == 0:
             self.weight = np.linalg.pinv(training_data)@training_labels # without ridge (with pinv for optimisation)
         else:
-            regulator = self.lmda*np.identity(training_data.shape[1])   #for rifge
+            regulator = self.lmda*np.identity(training_data.shape[1])   #for ridge
             self.weight = np.linalg.inv(training_data.T@training_data + regulator)@training_data.T@training_labels
         
         ###

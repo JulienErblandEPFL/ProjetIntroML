@@ -37,7 +37,7 @@ class LogisticRegression(object):
         #### WRITE YOUR CODE HERE!
 
         #initialisation
-        training_labels = label_to_onehot(training_labels)
+        labels_onehot = label_to_onehot(training_labels)
 
         D = training_data.shape[1]  # number of features
         C = get_n_classes(training_labels)  # number of classes
@@ -46,9 +46,7 @@ class LogisticRegression(object):
         #gradient descent
         for i in range(self.max_iters):
             #find the gradient and do a gradient step
-            print("Step :",i)
-            print(self.weights)
-            self.gradient = training_data.T@(self.softmax(training_data@self.weights) - training_labels)  #cross entropy calculation
+            self.gradient = training_data.T@(self.softmax(training_data@self.weights) - labels_onehot)  #cross entropy calculation
             self.weights = self.weights - self.lr*self.gradient
 
 
@@ -90,12 +88,8 @@ class LogisticRegression(object):
         ##
         ###
         #### WRITE YOUR CODE HERE!
-        print(test_data.shape)
-        print(self.weights.shape)
-
         probabilities = self.softmax(test_data @ self.weights)
         pred_labels = onehot_to_label(probabilities)
-    
         ###
         ##
         return pred_labels

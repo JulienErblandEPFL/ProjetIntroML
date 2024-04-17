@@ -56,16 +56,6 @@ def main(args):
     ctrain = normalize_fn(ctrain,means,std)
     ctest = normalize_fn(ctest,means,std)
 
-    means = np.mean(xtrain,0,keepdims=True)
-    std   = np.std(xtrain,0,keepdims=True) 
-    xtrain = normalize_fn(xtrain,means,std)
-    xtest = normalize_fn(xtest,means,std)
-
-    means = np.mean(ytrain,0,keepdims=True)
-    std   = np.std(ytrain,0,keepdims=True) 
-    ytrain = normalize_fn(ytrain,means,std)
-    ytest = normalize_fn(ytest,means,std)
-
     #biais appending
     ctrain = append_bias_term(ctrain)
     ctest = append_bias_term(ctest)
