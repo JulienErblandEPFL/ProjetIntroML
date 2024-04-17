@@ -57,7 +57,6 @@ def main(args):
 
     ctrain = append_bias_term(ctrain)
     ctest = append_bias_term(ctest)
-    
 
 
     ## 3. Initialize the method you want to use.
@@ -91,7 +90,7 @@ def main(args):
         train_loss = mse_fn(train_pred, ctrain)
         loss = mse_fn(preds, ctest)
 
-        print(f"\nTrain loss = {train_loss:.3f}% - Test loss = {loss:.3f}")
+        print(f"\nTrain loss = {train_loss:.3f}% - Test loss = {loss:.3f}") #why is there "%" ???
 
     elif args.task == "breed_identifying":
 

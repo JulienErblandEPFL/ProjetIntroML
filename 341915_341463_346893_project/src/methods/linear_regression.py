@@ -16,7 +16,7 @@ class LinearRegression(object):
         self.lmda = lmda
         self.task_kind = task_kind
 
-    def fit(self, training_data, training_labels):
+    def fit(self, training_data, training_labels):  
         """
             Trains the model, returns predicted labels for training data.
             Arguments:
@@ -32,11 +32,11 @@ class LinearRegression(object):
         #do not forget to normalize in the main
         #in the main try with and without bias appened to check performance
 
-        regulator = self.lmda*np.eye(training_data.shape[1])   #for rifge
+        regulator = self.lmda*np.identity(training_data.shape[1])   #for rifge
         self.weight = np.linalg.inv(training_data.T@training_data + regulator)@training_data.T@training_labels
 
         # without ridge (with pinv for optimisation)
-        #pred_regression_targets = np.linalg.pinv(training_data)@training_labels
+        #self.weight = np.linalg.pinv(training_data)@training_labels
         ###
         ##
         
