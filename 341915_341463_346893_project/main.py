@@ -50,11 +50,13 @@ def main(args):
     
     ### WRITE YOUR CODE HERE to do any other data processing
     
+    #normalisation
     means = np.mean(ctrain,0,keepdims=True)
     std   = np.std(ctrain,0,keepdims=True) 
     ctrain = normalize_fn(ctrain,means,std)
     ctest = normalize_fn(ctest,means,std)
 
+    #biais appending
     ctrain = append_bias_term(ctrain)
     ctest = append_bias_term(ctest)
 
