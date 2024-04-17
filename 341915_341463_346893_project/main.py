@@ -74,6 +74,8 @@ def main(args):
     ### WRITE YOUR CODE HERE
     elif args.method == "linear_regression":
         method_obj = LinearRegression(lmda = args.lmda)
+    elif args.method == "logistic_regression":
+        method_obj = LogisticRegression(lr = args.lr, max_iters = args.max_iters)
     elif...:
         pass
 

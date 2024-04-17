@@ -20,7 +20,7 @@ class LogisticRegression(object):
         self.lr = lr
         self.max_iters = max_iters
         self.task_kind = task_kind
-
+    
 
     def fit(self, training_data, training_labels):
         """
@@ -35,9 +35,37 @@ class LogisticRegression(object):
         ##
         ###
         #### WRITE YOUR CODE HERE!
+
+        #initialisation
+        D = training_data.shape[1]  # number of features
+        C = training_labels.shape[1]  # number of classes
+        self.weights = np.random.normal(0, 0.1, (D, C))
+        
+        #gradient descent
+        for i in range(self.max_iters):
+            #find the gradient and do a gradient step
+            self.gradient = training_data.T@(self.softmax(training_data)-training_labels)  #cross entropy calculation
+            self.weights = self.weights - self.lr*self.gradient
+             
+
         ###
         ##
-        return pred_labels
+        return self.predict(training_data)
+
+    def softmax(self,data):
+        prob_matrix = np.empty((len(data), self.weights.shape[1]))  # Shape: (N, C)
+
+        for i in range(len(data)):
+            # Calculate scores for each class for the ith data sample
+            scores = np.exp(data[i] @ self.weights)  # Shape: (C,)
+            
+            # Calculate softmax probabilities
+            probabilities = scores / np.sum(scores)
+            
+            # Store probabilities for the ith data sample
+            prob_matrix[i] = probabilities
+            
+        return prob_matrix
 
     def predict(self, test_data):
         """
@@ -51,6 +79,10 @@ class LogisticRegression(object):
         ##
         ###
         #### WRITE YOUR CODE HERE!
+
+        probabilities = self.softmax(test_data@self.weights)
+        pred_labels = onehot_to_label(probabilities)
+    
         ###
         ##
         return pred_labels
