@@ -48,6 +48,34 @@ class KNN(object):
         return np.argmax(np.bincount(neighbor_labels))
 
 
+
+    def kNN_one_example(unlabeled_example, training_features, training_labels, k):
+        """Returns the label of a single unlabelled example.
+
+        Inputs:
+            unlabeled_example: shape (D,) 
+            training_features: shape (NxD)
+            training_labels: shape (N,) 
+            k: integer
+        Outputs:
+            predicted label
+        """
+        # WRITE YOUR CODE HERE
+        
+        # Compute distances
+        distances = euclidean_dist(unlabeled_example,training_features)
+        
+        # Find neighbors
+        nn_indices = find_k_nearest_neighbors(k,distances)
+        
+        # Get neighbors' labels
+        neighbor_labels = training_labels[nn_indices]
+        
+        # Pick the most common
+        best_label = predict_label(neighbors_labels)
+        
+        return best_label
+
     def fit(self, training_data, training_labels):
         """
             Trains the model, returns predicted labels for training data.
@@ -68,7 +96,9 @@ class KNN(object):
         #### YOUR CODE HERE!
         ###
         ##
-        return pred_labels
+        self.labels = training_labels
+        self.training_data = training_data
+        return self.predict(training_data)
 
     def predict(self, test_data):
         """
