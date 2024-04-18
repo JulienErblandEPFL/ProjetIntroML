@@ -5,16 +5,17 @@ class KNN(object):
         kNN classifier object.
     """
 
-    def __init__(self, k=1, task_kind = "classification",distance = "euclidian"):
+    def __init__(self, k=1, task_kind = "classification",distance = "euclidian",predict = "average"):
         """
             Call set_arguments function of this class.
         """
         self.k = k
         self.task_kind = task_kind
         self.distance = distance
+        self.predict_method = predict
 
     def euclidean_dist(self, one_element, training_data):
-        """Compute the Euclidean distance between a single example
+        """Compute the Euclidean distance between a single
         vector and all training_data.
 
         Inputs:
@@ -26,6 +27,15 @@ class KNN(object):
         return np.sqrt(np.sum((training_data - one_element) ** 2, axis=1))
     
     def chi_square_dist(self,one_element,training_data):
+        """Compute the Chi-square distance between a single
+        vector and all training_data.
+
+        Inputs:
+            example: shape (D,)
+            training_data: shape (NxD) 
+        Outputs:
+            chi-square distances: shape (N,)
+        """
         epsilon = 1e-6 #to avoid division by zero
         return np.sqrt(np.sum((one_element - training_data)**2 / (one_element + training_data + epsilon), axis=1))
 
@@ -41,38 +51,38 @@ class KNN(object):
             indices of the k nearest neighbors: shape (k,)
         """
         sorted_indices = np.argsort(distances)
-        return sorted_indices[:k]
+        nn_indices = sorted_indices[:k]
+
+        if self.task_kind == "regression" and self.predict_method == "weighted_average":   #Compute the weights only if we will need them later
+            epsilon = 1e-6
+            distances[distances == 0] = epsilon #avoid division by zeros, a little epsilon will increase the weights of neighbors with distance == 0     
+            self.weights = 1/distances[nn_indices]
+        return nn_indices
     
     def predict_label(self, neighbours_labels):
         """
-        # Convert arrays to tuples to make them hashable
-        array_tuples = [tuple(subarray) for subarray in arrays]
-        
-        # Count occurrences of each array
-        counts = {}
-        for array_tuple in array_tuples:
-            if array_tuple in counts:
-                counts[array_tuple] += 1
-            else:
-                counts[array_tuple] = 1
-        
-        # Find the array with maximum count
-        max_count = 0
-        most_common_array = None
-        for array_tuple, count in counts.items():
-            if count > max_count:
-                max_count = count
-                most_common_array = array_tuple
-        
-        # Convert tuple back to list
-        most_common_array = list(most_common_array)
+        Predict the label using the k-nearest neighbors in the classification task
         """
-        
         return np.argmax(np.bincount(neighbours_labels))
     
 
     def predict_average(self, neighbors):
+        """
+        Predict the value using the average of the k-nearest neighbors in the regression task
+        """
         return np.sum(neighbors,axis = 0)/self.k
+    
+    def predict_weighted_average(self,neigbors):
+        """
+        Predict the value using the weighted average of the k-nearest neighbors in the regression task
+        """
+        num_vectors = len(self.weights)
+        multiplied_vectors = np.empty_like(neigbors)
+        
+        for i in range(num_vectors):
+            multiplied_vectors[i] = neigbors[i] * self.weights[i]
+
+        return np.sum(multiplied_vectors)/np.sum(self.weights)   #sum of the weights can't be equal to 0 because of the precautions taken before
 
 
     def kNN_one_example(self, unlabeled, training_features, training_labels, k):
@@ -103,7 +113,10 @@ class KNN(object):
             return best_label
         
         elif self.task_kind == "regression":
-            return self.predict_average(neighbors)
+            if self.predict_method == "average":
+                return self.predict_average(neighbors)
+            elif self.predict_method == "weighted_average":
+                return self.predict_weighted_average(neighbors)
 
     def fit(self, training_data, training_labels):
         """
