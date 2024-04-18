@@ -80,9 +80,9 @@ class KNN(object):
         multiplied_vectors = np.empty_like(neigbors)
         
         for i in range(num_vectors):
-            multiplied_vectors[i] = neigbors[i] * self.weights[i]
+            multiplied_vectors[i] = neigbors[i] * self.weights[i]    
 
-        return np.sum(multiplied_vectors)/np.sum(self.weights)   #sum of the weights can't be equal to 0 because of the precautions taken before
+        return np.sum(multiplied_vectors,axis = 0)/np.sum(self.weights)   #sum of the weights can't be equal to 0 because of the precautions taken before
 
 
     def kNN_one_example(self, unlabeled, training_features, training_labels, k):

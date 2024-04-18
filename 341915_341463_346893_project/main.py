@@ -1,6 +1,7 @@
 import argparse
 
 import numpy as np
+import matplotlib.pyplot as plt
 
 from src.data import load_data
 from src.methods.dummy_methods import DummyClassifier
@@ -96,42 +97,102 @@ def main(args):
 
 
     ## 4. Train and evaluate the method
+    if not args.plotting :
+        print("Evaluating one example")
+        if args.task == "center_locating":
+            # Fit parameters on training data
+            preds_train = method_obj.fit(xtrain, ctrain)
 
-    if args.task == "center_locating":
-        # Fit parameters on training data
-        preds_train = method_obj.fit(xtrain, ctrain)
+            # Perform inference for training and test data
+            train_pred = method_obj.predict(xtrain)
+            preds = method_obj.predict(xtest)
 
-        # Perform inference for training and test data
-        train_pred = method_obj.predict(xtrain)
-        preds = method_obj.predict(xtest)
+            ## Report results: performance on train and valid/test sets
+            train_loss = mse_fn(train_pred, ctrain)
+            loss = mse_fn(preds, ctest)
 
-        ## Report results: performance on train and valid/test sets
-        train_loss = mse_fn(train_pred, ctrain)
-        loss = mse_fn(preds, ctest)
+            print(f"\nTrain loss = {train_loss:.3f}% - Test loss = {loss:.3f}") #why is there "%" ???
 
-        print(f"\nTrain loss = {train_loss:.3f}% - Test loss = {loss:.3f}") #why is there "%" ???
+        elif args.task == "breed_identifying":
 
-    elif args.task == "breed_identifying":
+            # Fit (:=train) the method on the training data for classification task
+            preds_train = method_obj.fit(xtrain, ytrain)
 
-        # Fit (:=train) the method on the training data for classification task
-        preds_train = method_obj.fit(xtrain, ytrain)
+            # Predict on unseen data
+            preds = method_obj.predict(xtest)
 
-        # Predict on unseen data
-        preds = method_obj.predict(xtest)
+            ## Report results: performance on train and valid/test sets
+            acc = accuracy_fn(preds_train, ytrain)
+            macrof1 = macrof1_fn(preds_train, ytrain)
+            print(f"\nTrain set: accuracy = {acc:.3f}% - F1-score = {macrof1:.6f}")
 
-        ## Report results: performance on train and valid/test sets
-        acc = accuracy_fn(preds_train, ytrain)
-        macrof1 = macrof1_fn(preds_train, ytrain)
-        print(f"\nTrain set: accuracy = {acc:.3f}% - F1-score = {macrof1:.6f}")
+            acc = accuracy_fn(preds, ytest)
+            macrof1 = macrof1_fn(preds, ytest)
+            print(f"Test set:  accuracy = {acc:.3f}% - F1-score = {macrof1:.6f}")
+        else:
+            raise Exception("Invalid choice of task! Only support center_locating and breed_identifying!")
+    else :
+        ### WRITE YOUR CODE HERE if you want to add other outputs, visualization, etc.
+        print("Plotting")
+        k_points = np.arange(1,30)
+        accuracy_1 = np.zeros(len(k_points))
+        accuracy_2 = np.zeros(len(k_points))
+        accuracy_3 = np.zeros(len(k_points))
+        accuracy_4 = np.zeros(len(k_points))
 
-        acc = accuracy_fn(preds, ytest)
-        macrof1 = macrof1_fn(preds, ytest)
-        print(f"Test set:  accuracy = {acc:.3f}% - F1-score = {macrof1:.6f}")
-    else:
-        raise Exception("Invalid choice of task! Only support center_locating and breed_identifying!")
+        data_train1 = xtrain
+        data_train2 = ctrain
+        data_test = xtest
+        result_test = ctest
 
-    ### WRITE YOUR CODE HERE if you want to add other outputs, visualization, etc.
+        for k in k_points:
+            met = KNN(k = k, task_kind="regression",distance="euclidian",predict = "average")
+            
+            
+            # Fit (:=train) the method on the training data for classification task
+            preds_train = met.fit(data_train1, data_train2)
+            preds = met.predict(data_test)
+            accuracy_1[k-1] = mse_fn(preds, result_test)
 
+            met = KNN(k = k, task_kind="regression",distance="euclidian",predict = "weighted_average")
+
+            preds_train = met.fit(data_train1, data_train2)
+            preds = met.predict(data_test)
+            accuracy_2[k-1] = mse_fn(preds, result_test)
+
+            met = KNN(k = k, task_kind="regression",distance="chi-square",predict = "average")
+
+            preds_train = met.fit(data_train1, data_train2)
+            preds = met.predict(data_test)
+            accuracy_3[k-1] = mse_fn(preds, result_test)
+
+            met = KNN(k = k, task_kind="regression",distance="chi-square",predict = "weighted_average")
+
+            preds_train = met.fit(data_train1, data_train2)
+            preds = met.predict(data_test)
+            accuracy_4[k-1] = mse_fn(preds, result_test)
+
+        # Tracer les données des deux tableaux
+        plt.plot(k_points, accuracy_1, label='Euclidian and average',color = 'g')
+        plt.plot(k_points, accuracy_2, label='Euclidian and weighted average', color = 'b')
+        plt.plot(k_points, accuracy_3, label='Chi-square and average', color = 'c')
+        plt.plot(k_points, accuracy_4, label='Chi-square and weighted average', color = 'y')
+        plt.grid(True)
+        # Ajouter des étiquettes d'axe et une légende
+        print()
+        #plt.scatter(k_min,min_mse, label = "Best parameters : k : " + str(k_min) +", mse : " + str(min_mse), color = 'r')
+
+        plt.xlabel('K')
+        plt.ylabel('MSE')
+        plt.title('Relation between K and MSE with different implementations')
+        plt.legend()
+
+        # Afficher le graphe
+        plt.show()
+
+
+
+        
 
 if __name__ == '__main__':
     # Definition of the arguments that can be given through the command line (terminal).
@@ -151,6 +212,7 @@ if __name__ == '__main__':
     # Feel free to add more arguments here if you need!
     parser.add_argument('--distance', default= "euclidian",type = str, help="Methods to calculate the distance between two points : euclidian/chi-square")
     parser.add_argument('--predict', default= "average",type = str, help="Methods to approximate ŷ in kNN : average/weighted_average")
+    parser.add_argument('--plotting',action="store_true", help="Executing the plot")
 
     # MS2 arguments
     parser.add_argument('--nn_type', default="cnn", help="which network to use, can be 'Transformer' or 'cnn'")
