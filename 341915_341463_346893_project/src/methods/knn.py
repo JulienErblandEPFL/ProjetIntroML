@@ -73,6 +73,7 @@ class KNN(object):
         
         # Pick the most common
         best_label = self.predict_label(neighbor_labels)
+        best_label = self.predict_label(neighbor_labels)
         
         return best_label
 
