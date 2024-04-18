@@ -62,7 +62,6 @@ class KNN(object):
         most_common_array = list(most_common_array)
         
         return most_common_array
-    
 
 
 
