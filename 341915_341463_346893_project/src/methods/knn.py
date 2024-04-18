@@ -38,7 +38,8 @@ class KNN(object):
         sorted_indices = np.argsort(distances)
         return sorted_indices[:k]
     
-    def predict_label(self, arrays):
+    def predict_label(self, neighbours_labels):
+        """
         # Convert arrays to tuples to make them hashable
         array_tuples = [tuple(subarray) for subarray in arrays]
         
@@ -60,8 +61,11 @@ class KNN(object):
         
         # Convert tuple back to list
         most_common_array = list(most_common_array)
+        """
+
         
-        return most_common_array
+        return np.argmax(np.bincount(neighbours_labels))
+    
 
 
 
