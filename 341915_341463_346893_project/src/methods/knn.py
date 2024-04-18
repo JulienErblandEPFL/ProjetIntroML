@@ -45,7 +45,9 @@ class KNN(object):
         Outputs:
             most frequent label
         """
-        return np.argmax(np.bincount(neighbor_labels))
+        unique_neighbors, counts = np.unique(neighbor_labels,return_counts = True)
+
+        return unique_neighbors[np.argmax(counts)]
 
 
 
@@ -70,9 +72,7 @@ class KNN(object):
         
         # Get neighbors' labels
         neighbor_labels = training_labels[nn_indices]
-        
         # Pick the most common
-        best_label = self.predict_label(neighbor_labels)
         best_label = self.predict_label(neighbor_labels)
         
         return best_label
