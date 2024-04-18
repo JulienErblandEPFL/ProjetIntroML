@@ -45,9 +45,22 @@ class KNN(object):
         Outputs:
             most frequent label
         """
-        unique_neighbors, counts = np.unique(neighbor_labels,return_counts = True)
+        
+        tenseur = torch.tensor(tableau_de_vecteurs)
 
-        return unique_neighbors[np.argmax(counts)]
+        # Utiliser torch.unique pour obtenir les vecteurs uniques et leurs indices
+        vecteurs_uniques, indices = torch.unique(tenseur, return_inverse=True, dim=0)
+
+        # Utiliser torch.bincount pour compter les occurrences de chaque vecteur
+        occurrences = torch.bincount(indices)
+
+        # Trouver l'indice du vecteur le plus fréquent
+        indice_plus_frequent = torch.argmax(occurrences)
+
+        # Récupérer le vecteur le plus fréquent
+        vecteur_plus_frequent = vecteurs_uniques[indice_plus_frequent]
+
+        return vecteur_plus_frequent
 
 
 
@@ -74,7 +87,7 @@ class KNN(object):
         neighbor_labels = training_labels[nn_indices]
         # Pick the most common
         best_label = self.predict_label(neighbor_labels)
-        
+
         return best_label
 
     def fit(self, training_data, training_labels):
