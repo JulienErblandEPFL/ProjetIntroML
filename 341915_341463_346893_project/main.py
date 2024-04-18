@@ -78,7 +78,7 @@ def main(args):
     elif args.method == "logistic_regression":
         method_obj = LogisticRegression(lr = args.lr, max_iters = args.max_iters)
     elif args.method == "knn":
-        method_obj = KNN(k= args.K)
+        method_obj = KNN(k= args.K,distance=args.distance)
 
 
     ## 4. Train and evaluate the method
@@ -135,6 +135,7 @@ if __name__ == '__main__':
 
 
     # Feel free to add more arguments here if you need!
+    parser.add_argument('--distance', default= "euclidian",type = str, help="Methods to calculate the distance between two points : euclidian/chi-square")
 
     # MS2 arguments
     parser.add_argument('--nn_type', default="cnn", help="which network to use, can be 'Transformer' or 'cnn'")

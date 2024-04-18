@@ -53,7 +53,7 @@ class LinearRegression(object):
         ##
         ###
         #### YOUR CODE HERE!
-        pred_regression_targets = test_data@self.weight
+        pred_regression_targets = test_data @ self.weight
         ###
         ##
 
