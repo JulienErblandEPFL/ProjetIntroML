@@ -89,7 +89,7 @@ class KNN(object):
         neighbor_labels = training_labels[nn_indices]
         # Pick the most common
         best_label = self.predict_label(neighbor_labels)
-        
+
         return best_label
 
     def fit(self, training_data, training_labels):
