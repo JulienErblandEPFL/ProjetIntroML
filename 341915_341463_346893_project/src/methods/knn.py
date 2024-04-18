@@ -1,29 +1,34 @@
 import numpy as np
-import torch
 
 class KNN(object):
     """
         kNN classifier object.
     """
 
-    def __init__(self, k=1, task_kind = "classification"):
+    def __init__(self, k=1, task_kind = "classification",distance = "euclidian"):
         """
             Call set_arguments function of this class.
         """
         self.k = k
-        self.task_kind =task_kind
+        self.task_kind = task_kind
+        self.distance = distance
 
-    def euclidean_dist(self, example, training_examples):
+    def euclidean_dist(self, one_element, training_data):
         """Compute the Euclidean distance between a single example
-        vector and all training_examples.
+        vector and all training_data.
 
         Inputs:
             example: shape (D,)
-            training_examples: shape (NxD) 
+            training_data: shape (NxD) 
         Outputs:
             euclidean distances: shape (N,)
         """
-        return np.sqrt(np.sum((training_examples - example) ** 2, axis=1))
+        return np.sqrt(np.sum((training_data - one_element) ** 2, axis=1))
+    
+    def chi_square_dist(self,one_element,training_data):
+        epsilon = 1e-6 #to avoid division by zero
+        return np.sqrt(np.sum((one_element - training_data)**2 / (one_element + training_data + epsilon), axis=1))
+
     
     def find_k_nearest_neighbors(self, k, distances):
         """ Find the indices of the k smallest distances from a list of distances.
@@ -62,7 +67,6 @@ class KNN(object):
         # Convert tuple back to list
         most_common_array = list(most_common_array)
         """
-
         
         return np.argmax(np.bincount(neighbours_labels))
     
@@ -71,7 +75,7 @@ class KNN(object):
         return np.sum(neighbors,axis = 0)/self.k
 
 
-    def kNN_one_example(self, unlabeled_example, training_features, training_labels, k):
+    def kNN_one_example(self, unlabeled, training_features, training_labels, k):
         """Returns the label of a single unlabelled example.
 
         Inputs:
@@ -83,7 +87,10 @@ class KNN(object):
             predicted label
         """     
         # Compute distances
-        distances = self.euclidean_dist(unlabeled_example,training_features)
+        if self.distance == "euclidian":
+            distances = self.euclidean_dist(unlabeled,training_features)
+        elif self.distance == "chi-square":
+            distances = self.chi_square_dist(unlabeled,training_features)    
         
         # Find neighbors
         nn_indices = self.find_k_nearest_neighbors(k,distances)

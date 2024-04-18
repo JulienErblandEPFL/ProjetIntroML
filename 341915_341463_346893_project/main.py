@@ -153,6 +153,7 @@ if __name__ == '__main__':
 
 
     # Feel free to add more arguments here if you need!
+    parser.add_argument('--distance', default= "euclidian",type = str, help="Methods to calculate the distance between two points : euclidian/chi-square")
 
     # MS2 arguments
     parser.add_argument('--nn_type', default="cnn", help="which network to use, can be 'Transformer' or 'cnn'")
