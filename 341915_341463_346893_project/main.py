@@ -1,5 +1,5 @@
 import argparse
-
+import random
 import numpy as np
 
 from src.data import load_data
@@ -46,6 +46,21 @@ def main(args):
         # Split the data into training and validation sets
         split_ratio = 0.8  # 80% training, 20% validation #ARBITRARY
 
+        #mélange les datas
+        size = len(xtrain)  #(=len(ytrain) = len(ctrain))
+        pattern = [i for i in range(size)]
+        random.shuffle(pattern)
+
+        xtrain2 = np.empty_like(xtrain)
+        ytrain2 = np.empty_like(ytrain)
+        ctrain2 = np.empty_like(ctrain)
+
+        for i, p in enumerate(pattern):
+            xtrain2[p] = xtrain[i]
+            ytrain2[p] = ytrain[i]
+            ctrain2[p] = ctrain[i]
+
+        #crée les validationSet et les training set
         xvalidationSet = xtrain[int(len(xtrain) * split_ratio):]
         yvalidationSet = ytrain[int(len(ytrain) * split_ratio):]
         cvalidationSet = ctrain[int(len(ctrain) * split_ratio):]
