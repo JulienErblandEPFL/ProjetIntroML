@@ -37,6 +37,18 @@ class KNN(object):
         """
         sorted_indices = np.argsort(distances)
         return sorted_indices[:k]
+    
+    def predict_label(self, neighbor_labels):
+        """Return the most frequent label in the neighbors'.
+
+        Inputs:
+            neighbor_labels: shape (N,) 
+        Outputs:
+            most frequent label
+        """
+        unique_neighbors, counts = np.unique(neighbor_labels,return_counts = True)
+
+        return unique_neighbors[np.argmax(counts)]
 
 
 
@@ -61,9 +73,7 @@ class KNN(object):
         
         # Get neighbors' labels
         neighbor_labels = training_labels[nn_indices]
-        
         # Pick the most common
-        best_label = self.predict_label(neighbor_labels)
         best_label = self.predict_label(neighbor_labels)
         
         return best_label
