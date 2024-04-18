@@ -1,5 +1,5 @@
 import argparse
-
+import random
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -39,7 +39,6 @@ def main(args):
     ##TODO: xtrain, xtest, ytrain, ytest are for classification task. (To be used for Logistic Regression and KNN)
 
 
-
     ## 2. Then we must prepare it. This is were you can create a validation set,
     #  normalize, add bias, etc.
     # Make a validation set (it can overwrite xtest, ytest)
@@ -47,17 +46,29 @@ def main(args):
         # Split the data into training and validation sets
         split_ratio = 0.8  # 80% training, 20% validation #ARBITRARY
 
-        xvalidationSet = xtrain[int(len(xtrain) * split_ratio):]
-        yvalidationSet = ytrain[int(len(ytrain) * split_ratio):]
-        cvalidationSet = ctrain[int(len(ctrain) * split_ratio):]
+        #mélange les datas
+        size = len(xtrain)  #(=len(ytrain) = len(ctrain))
+        pattern = [i for i in range(size)]
+        random.shuffle(pattern)
 
-        xtrain = xtrain[:int(len(xtrain) * split_ratio)]
-        ytrain = ytrain[:int(len(ytrain) * split_ratio)]
-        ctrain = ctrain[:int(len(ctrain) * split_ratio)]
+        xtrain2 = np.empty_like(xtrain)
+        ytrain2 = np.empty_like(ytrain)
+        ctrain2 = np.empty_like(ctrain)
 
-        #xtest = xtest[:int(len(xtrain) * split_ratio)] #pas necessaire
-        #ytest = ytest[:int(len(ytrain) * split_ratio)] #pas necessaire
-        #ctest = ctest[:int(len(ctrain) * split_ratio)] #pas necessaire
+        for i, p in enumerate(pattern):
+            xtrain2[p] = xtrain[i]
+            ytrain2[p] = ytrain[i]
+            ctrain2[p] = ctrain[i]
+
+        #crée les validationSet
+        xtest = xtrain2[int(len(xtrain) * split_ratio):]
+        ytest = ytrain2[int(len(ytrain) * split_ratio):]
+        ctest = ctrain2[int(len(ctrain) * split_ratio):]
+
+        #crée les trainingSet
+        xtrain = xtrain2[:int(len(xtrain) * split_ratio)]
+        ytrain = ytrain2[:int(len(ytrain) * split_ratio)]
+        ctrain = ctrain2[:int(len(ctrain) * split_ratio)]
     
     ### WRITE YOUR CODE HERE to do any other data processing
     
