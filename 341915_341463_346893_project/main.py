@@ -73,14 +73,14 @@ def main(args):
     ### WRITE YOUR CODE HERE to do any other data processing
     
     #normalisation
-    means = np.mean(ctrain,0,keepdims=True)
-    std   = np.std(ctrain,0,keepdims=True) 
-    ctrain = normalize_fn(ctrain,means,std)
-    ctest = normalize_fn(ctest,means,std)
+    mu_train = np.mean(xtrain,0,keepdims=True)
+    std_train = np.std(xtrain,0,keepdims=True)
+    xtrain = normalize_fn(xtrain, mu_train, std_train)
+    xtest = normalize_fn(xtest, mu_train, std_train)
 
     #biais appending
-    ctrain = append_bias_term(ctrain)
-    ctest = append_bias_term(ctest)
+    xtrain = append_bias_term(xtrain)
+    xtest = append_bias_term(xtest)
 
 
 
@@ -145,57 +145,37 @@ def main(args):
     else :
         ### WRITE YOUR CODE HERE if you want to add other outputs, visualization, etc.
         print("Plotting")
-        k_points = np.arange(1,30)
-        accuracy_1 = np.zeros(len(k_points))
-        accuracy_2 = np.zeros(len(k_points))
-        accuracy_3 = np.zeros(len(k_points))
-        accuracy_4 = np.zeros(len(k_points))
+        #lambdas = np.logspace(-3,1,num = 100,endpoint = True)
+        iters = np.arange(100,1500,10)
+        accuracy_1 = np.zeros(len(iters))
 
         data_train1 = xtrain
-        data_train2 = ctrain
+        data_train2 = ytrain
         data_test = xtest
-        result_test = ctest
+        result_test = ytest
 
-        for k in k_points:
-            met = KNN(k = k, task_kind="regression",distance="euclidian",predict = "average")
+        for i in range(len(iters)):
+
+            met = LogisticRegression(lr=0.0075,max_iters=iters[i])
             
-            
-            # Fit (:=train) the method on the training data for classification task
             preds_train = met.fit(data_train1, data_train2)
             preds = met.predict(data_test)
-            accuracy_1[k-1] = mse_fn(preds, result_test)
+            accuracy_1[i] = accuracy_fn(preds, result_test)
 
-            met = KNN(k = k, task_kind="regression",distance="euclidian",predict = "weighted_average")
 
-            preds_train = met.fit(data_train1, data_train2)
-            preds = met.predict(data_test)
-            accuracy_2[k-1] = mse_fn(preds, result_test)
-
-            met = KNN(k = k, task_kind="regression",distance="chi-square",predict = "average")
-
-            preds_train = met.fit(data_train1, data_train2)
-            preds = met.predict(data_test)
-            accuracy_3[k-1] = mse_fn(preds, result_test)
-
-            met = KNN(k = k, task_kind="regression",distance="chi-square",predict = "weighted_average")
-
-            preds_train = met.fit(data_train1, data_train2)
-            preds = met.predict(data_test)
-            accuracy_4[k-1] = mse_fn(preds, result_test)
-
+        best_it = iters[np.argmax(accuracy_1)]
+        max_acc = np.max(accuracy_1)
+        plt.scatter(best_it,max_acc,label = f"Best max_iter : max_iter = {best_it}, accuracy = {max_acc:.3f}%", color = 'r')
         # Tracer les données des deux tableaux
-        plt.plot(k_points, accuracy_1, label='Euclidian and average',color = 'g')
-        plt.plot(k_points, accuracy_2, label='Euclidian and weighted average', color = 'b')
-        plt.plot(k_points, accuracy_3, label='Chi-square and average', color = 'c')
-        plt.plot(k_points, accuracy_4, label='Chi-square and weighted average', color = 'y')
+        plt.plot(iters, accuracy_1, label='Logistic regression',color = 'b')
+
+
         plt.grid(True)
         # Ajouter des étiquettes d'axe et une légende
-        print()
-        #plt.scatter(k_min,min_mse, label = "Best parameters : k : " + str(k_min) +", mse : " + str(min_mse), color = 'r')
-
-        plt.xlabel('K')
-        plt.ylabel('MSE')
-        plt.title('Relation between K and MSE with different implementations')
+    
+        plt.xlabel('Number of iterations')
+        plt.ylabel('Accuracy')
+        plt.title('Relation between max_iter and accuracy(max_iter = 500)')
         plt.legend()
 
         # Afficher le graphe

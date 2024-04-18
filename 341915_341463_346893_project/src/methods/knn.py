@@ -37,7 +37,7 @@ class KNN(object):
             chi-square distances: shape (N,)
         """
         epsilon = 1e-6 #to avoid division by zero
-        return np.sqrt(np.sum((one_element - training_data)**2 / (one_element + training_data + epsilon), axis=1))
+        return np.sqrt(np.sum((one_element - training_data)**2 / np.abs(one_element + training_data + epsilon), axis=1)) #we have to use np.abs because there were negative values
 
     
     def find_k_nearest_neighbors(self, k, distances):
