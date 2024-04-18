@@ -77,8 +77,8 @@ def main(args):
         method_obj = LinearRegression(lmda = args.lmda)
     elif args.method == "logistic_regression":
         method_obj = LogisticRegression(lr = args.lr, max_iters = args.max_iters)
-    elif...:
-        pass
+    elif args.method == "knn":
+        method_obj = KNN(k= args.k)
 
 
     ## 4. Train and evaluate the method
