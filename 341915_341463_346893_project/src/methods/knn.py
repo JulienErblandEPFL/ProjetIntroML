@@ -12,6 +12,42 @@ class KNN(object):
         self.k = k
         self.task_kind =task_kind
 
+    def euclidean_dist(self, example, training_examples):
+        """Compute the Euclidean distance between a single example
+        vector and all training_examples.
+
+        Inputs:
+            example: shape (D,)
+            training_examples: shape (NxD) 
+        Outputs:
+            euclidean distances: shape (N,)
+        """
+        return np.sqrt(np.sum((training_examples - example) ** 2, axis=1))
+    
+    def find_k_nearest_neighbors(self, k, distances):
+        """ Find the indices of the k smallest distances from a list of distances.
+            Tip: use np.argsort()
+
+        Inputs:
+            k: integer
+            distances: shape (N,) 
+        Outputs:
+            indices of the k nearest neighbors: shape (k,)
+        """
+        sorted_indices = np.argsort(distances)
+        return sorted_indices[:k]
+    
+    def predict_label(self, neighbor_labels):
+        """Return the most frequent label in the neighbors'.
+
+        Inputs:
+            neighbor_labels: shape (N,) 
+        Outputs:
+            most frequent label
+        """
+        return np.argmax(np.bincount(neighbor_labels))
+
+
     def fit(self, training_data, training_labels):
         """
             Trains the model, returns predicted labels for training data.
@@ -48,4 +84,6 @@ class KNN(object):
         #### YOUR CODE HERE!
         ###
         ##
-        return test_labels
+        return np.apply_along_axis(func1d=kNN_one_example, axis=1, arr=unlabeled, 
+                                training_features=training_features, 
+                               training_labels=training_labels, k=k)
