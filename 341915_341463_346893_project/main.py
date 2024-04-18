@@ -38,7 +38,6 @@ def main(args):
     ##TODO: xtrain, xtest, ytrain, ytest are for classification task. (To be used for Logistic Regression and KNN)
 
 
-
     ## 2. Then we must prepare it. This is were you can create a validation set,
     #  normalize, add bias, etc.
     # Make a validation set (it can overwrite xtest, ytest)
@@ -61,14 +60,14 @@ def main(args):
             ctrain2[p] = ctrain[i]
 
         #crée les validationSet
-        xtest = xtrain[int(len(xtrain) * split_ratio):]
-        ytest = ytrain[int(len(ytrain) * split_ratio):]
-        ctest = ctrain[int(len(ctrain) * split_ratio):]
+        xtest = xtrain2[int(len(xtrain) * split_ratio):]
+        ytest = ytrain2[int(len(ytrain) * split_ratio):]
+        ctest = ctrain2[int(len(ctrain) * split_ratio):]
 
         #crée les trainingSet
-        xtrain = xtrain[:int(len(xtrain) * split_ratio)]
-        ytrain = ytrain[:int(len(ytrain) * split_ratio)]
-        ctrain = ctrain[:int(len(ctrain) * split_ratio)]
+        xtrain = xtrain2[:int(len(xtrain) * split_ratio)]
+        ytrain = ytrain2[:int(len(ytrain) * split_ratio)]
+        ctrain = ctrain2[:int(len(ctrain) * split_ratio)]
     
     ### WRITE YOUR CODE HERE to do any other data processing
     
