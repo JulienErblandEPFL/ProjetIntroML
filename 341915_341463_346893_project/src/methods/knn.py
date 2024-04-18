@@ -1,4 +1,5 @@
 import numpy as np
+import torch
 
 class KNN(object):
     """
@@ -131,3 +132,19 @@ class KNN(object):
         return np.apply_along_axis(func1d=self.kNN_one_example, axis=1, arr=test_data, 
                                 training_features=self.training_data, 
                                training_labels=self.labels, k=self.k)
+        
+        """
+        test_labels = []
+
+        # For each example in the test data
+        for example in test_data:
+            # Predict label using kNN for the current example
+            pred_label = self.kNN_one_example(example, self.training_data, self.labels, self.k)
+            # Append predicted label to the list of test labels
+            test_labels.append(pred_label)
+
+        # Convert the list of test labels to numpy array
+        test_labels = np.array(test_labels)
+
+        return test_labels
+        """
