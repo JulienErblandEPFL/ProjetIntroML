@@ -41,12 +41,17 @@ def main(args):
 
     ## 2. Then we must prepare it. This is were you can create a validation set,
     #  normalize, add bias, etc.
-
     # Make a validation set (it can overwrite xtest, ytest)
     if not args.test:
-        ### WRITE YOUR CODE HERE
-        
         pass
+    else:
+        print(test)
+        # Split the data into training and validation sets
+        split_ratio = 0.1  # ex: si 0.2 alors : 20% validation, 80% training
+        xsplit_index = int(len(xtrain) * split_ratio)
+        ysplit_index = int(len(ytrain) * split_ratio)
+        xtest = xtrain[:xsplit_index]
+        ytest = ytrain[:ysplit_index]
     
     ### WRITE YOUR CODE HERE to do any other data processing
     
@@ -78,7 +83,11 @@ def main(args):
     elif args.method == "logistic_regression":
         method_obj = LogisticRegression(lr = args.lr, max_iters = args.max_iters)
     elif args.method == "knn":
-        method_obj = KNN(k= args.K,distance=args.distance)
+        if args.task == "center_locating":
+            method_obj = KNN(k= args.K,task_kind="regression")
+        else :
+            method_obj = KNN(k= args.K,task_kind="classification")
+                
 
 
     ## 4. Train and evaluate the method
