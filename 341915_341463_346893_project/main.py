@@ -84,9 +84,9 @@ def main(args):
         method_obj = LogisticRegression(lr = args.lr, max_iters = args.max_iters)
     elif args.method == "knn":
         if args.task == "center_locating":
-            method_obj = KNN(k= args.K,task_kind="regression")
+            method_obj = KNN(k = args.K, task_kind="regression", distance = args.distance, predict=args.predict)
         else :
-            method_obj = KNN(k= args.K,task_kind="classification")
+            method_obj = KNN(k = args.K, task_kind="classification", distance = args.distance)
                 
 
 
@@ -145,6 +145,7 @@ if __name__ == '__main__':
 
     # Feel free to add more arguments here if you need!
     parser.add_argument('--distance', default= "euclidian",type = str, help="Methods to calculate the distance between two points : euclidian/chi-square")
+    parser.add_argument('--predict', default= "average",type = str, help="Methods to approximate ŷ in kNN : average/weighted_average")
 
     # MS2 arguments
     parser.add_argument('--nn_type', default="cnn", help="which network to use, can be 'Transformer' or 'cnn'")
