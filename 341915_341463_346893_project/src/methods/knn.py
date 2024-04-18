@@ -49,7 +49,7 @@ class KNN(object):
 
 
 
-    def kNN_one_example(unlabeled_example, training_features, training_labels, k):
+    def kNN_one_example(self, unlabeled_example, training_features, training_labels, k):
         """Returns the label of a single unlabelled example.
 
         Inputs:
@@ -63,16 +63,16 @@ class KNN(object):
         # WRITE YOUR CODE HERE
         
         # Compute distances
-        distances = euclidean_dist(unlabeled_example,training_features)
+        distances = self.euclidean_dist(unlabeled_example,training_features)
         
         # Find neighbors
-        nn_indices = find_k_nearest_neighbors(k,distances)
+        nn_indices = self.find_k_nearest_neighbors(k,distances)
         
         # Get neighbors' labels
         neighbor_labels = training_labels[nn_indices]
         
         # Pick the most common
-        best_label = predict_label(neighbors_labels)
+        best_label = self.predict_label(neighbors_labels)
         
         return best_label
 
