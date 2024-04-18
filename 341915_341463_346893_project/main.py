@@ -60,18 +60,15 @@ def main(args):
             ytrain2[p] = ytrain[i]
             ctrain2[p] = ctrain[i]
 
-        #crée les validationSet et les training set
-        xvalidationSet = xtrain[int(len(xtrain) * split_ratio):]
-        yvalidationSet = ytrain[int(len(ytrain) * split_ratio):]
-        cvalidationSet = ctrain[int(len(ctrain) * split_ratio):]
+        #crée les validationSet
+        xtest = xtrain[int(len(xtrain) * split_ratio):]
+        ytest = ytrain[int(len(ytrain) * split_ratio):]
+        ctest = ctrain[int(len(ctrain) * split_ratio):]
 
+        #crée les trainingSet
         xtrain = xtrain[:int(len(xtrain) * split_ratio)]
         ytrain = ytrain[:int(len(ytrain) * split_ratio)]
         ctrain = ctrain[:int(len(ctrain) * split_ratio)]
-
-        #xtest = xtest[:int(len(xtrain) * split_ratio)] #pas necessaire
-        #ytest = ytest[:int(len(ytrain) * split_ratio)] #pas necessaire
-        #ctest = ctest[:int(len(ctrain) * split_ratio)] #pas necessaire
     
     ### WRITE YOUR CODE HERE to do any other data processing
     
