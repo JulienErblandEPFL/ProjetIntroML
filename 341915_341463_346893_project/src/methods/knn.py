@@ -38,17 +38,31 @@ class KNN(object):
         sorted_indices = np.argsort(distances)
         return sorted_indices[:k]
     
-    def predict_label(self, neighbor_labels):
-        """Return the most frequent label in the neighbors'.
-
-        Inputs:
-            neighbor_labels: shape (N,) 
-        Outputs:
-            most frequent label
-        """
-        unique_neighbors, counts = np.unique(neighbor_labels,return_counts = True)
-
-        return unique_neighbors[np.argmax(counts)]
+    def predict_label(self, arrays):
+        # Convert arrays to tuples to make them hashable
+        array_tuples = [tuple(subarray) for subarray in arrays]
+        
+        # Count occurrences of each array
+        counts = {}
+        for array_tuple in array_tuples:
+            if array_tuple in counts:
+                counts[array_tuple] += 1
+            else:
+                counts[array_tuple] = 1
+        
+        # Find the array with maximum count
+        max_count = 0
+        most_common_array = None
+        for array_tuple, count in counts.items():
+            if count > max_count:
+                max_count = count
+                most_common_array = array_tuple
+        
+        # Convert tuple back to list
+        most_common_array = list(most_common_array)
+        
+        return most_common_array
+    
 
 
 
