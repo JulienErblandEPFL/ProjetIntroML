@@ -67,6 +67,8 @@ class KNN(object):
         return np.argmax(np.bincount(neighbours_labels))
     
 
+    def predict_average(self, neighbors):
+        return np.sum(neighbors,axis = 0)/self.k
 
 
     def kNN_one_example(self, unlabeled_example, training_features, training_labels, k):
@@ -79,21 +81,22 @@ class KNN(object):
             k: integer
         Outputs:
             predicted label
-        """
-        # WRITE YOUR CODE HERE
-        
+        """     
         # Compute distances
         distances = self.euclidean_dist(unlabeled_example,training_features)
         
         # Find neighbors
         nn_indices = self.find_k_nearest_neighbors(k,distances)
-        
-        # Get neighbors' labels
-        neighbor_labels = training_labels[nn_indices]
-        # Pick the most common
-        best_label = self.predict_label(neighbor_labels)
 
-        return best_label
+        neighbors = training_labels[nn_indices]
+
+        if self.task_kind == "classification":
+            # Pick the most common
+            best_label = self.predict_label(neighbors)
+            return best_label
+        
+        elif self.task_kind == "regression":
+            return self.predict_average(neighbors)
 
     def fit(self, training_data, training_labels):
         """
