@@ -72,7 +72,7 @@ class KNN(object):
         neighbor_labels = training_labels[nn_indices]
         
         # Pick the most common
-        best_label = self.predict_label(neighbors_labels)
+        best_label = self.predict_label(neighbor_labels)
         
         return best_label
 
@@ -114,6 +114,4 @@ class KNN(object):
         #### YOUR CODE HERE!
         ###
         ##
-        return np.apply_along_axis(func1d=kNN_one_example, axis=1, arr=unlabeled, 
-                                training_features=training_features, 
-                               training_labels=training_labels, k=k)
+        return ...
