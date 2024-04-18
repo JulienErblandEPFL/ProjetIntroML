@@ -46,21 +46,17 @@ def main(args):
         # Split the data into training and validation sets
         split_ratio = 0.8  # 80% training, 20% validation #ARBITRARY
 
-        xtrain2 = xtrain[:int(len(xtrain) * split_ratio)]
-        ytrain2 = ytrain[:int(len(ytrain) * split_ratio)]
-        ctrain2 = ctrain[:int(len(ctrain) * split_ratio)]
-
-        xtest = xtest[:int(len(xtrain) * split_ratio)]
-        ytest = ytest[:int(len(ytrain) * split_ratio)]
-        ctest = ctest[:int(len(ctrain) * split_ratio)]
-
         xvalidationSet = xtrain[int(len(xtrain) * split_ratio):]
         yvalidationSet = ytrain[int(len(ytrain) * split_ratio):]
         cvalidationSet = ctrain[int(len(ctrain) * split_ratio):]
 
-        xtrain = xtrain2
-        ytrain = ytrain2
-        ctrain = ctrain2
+        xtrain = xtrain[:int(len(xtrain) * split_ratio)]
+        ytrain = ytrain[:int(len(ytrain) * split_ratio)]
+        ctrain = ctrain[:int(len(ctrain) * split_ratio)]
+
+        #xtest = xtest[:int(len(xtrain) * split_ratio)] #pas necessaire
+        #ytest = ytest[:int(len(ytrain) * split_ratio)] #pas necessaire
+        #ctest = ctest[:int(len(ctrain) * split_ratio)] #pas necessaire
     
     ### WRITE YOUR CODE HERE to do any other data processing
     
