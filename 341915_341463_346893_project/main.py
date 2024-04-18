@@ -43,15 +43,20 @@ def main(args):
     #  normalize, add bias, etc.
     # Make a validation set (it can overwrite xtest, ytest)
     if not args.test:
-        pass
-    else:
-        print(test)
         # Split the data into training and validation sets
-        split_ratio = 0.1  # ex: si 0.2 alors : 20% validation, 80% training
-        xsplit_index = int(len(xtrain) * split_ratio)
-        ysplit_index = int(len(ytrain) * split_ratio)
-        xtest = xtrain[:xsplit_index]
-        ytest = ytrain[:ysplit_index]
+        split_ratio = 0.8  # 80% training, 20% validation #ARBITRARY
+
+        xvalidationSet = xtrain[int(len(xtrain) * split_ratio):]
+        yvalidationSet = ytrain[int(len(ytrain) * split_ratio):]
+        cvalidationSet = ctrain[int(len(ctrain) * split_ratio):]
+
+        xtrain = xtrain[:int(len(xtrain) * split_ratio)]
+        ytrain = ytrain[:int(len(ytrain) * split_ratio)]
+        ctrain = ctrain[:int(len(ctrain) * split_ratio)]
+
+        #xtest = xtest[:int(len(xtrain) * split_ratio)] #pas necessaire
+        #ytest = ytest[:int(len(ytrain) * split_ratio)] #pas necessaire
+        #ctest = ctest[:int(len(ctrain) * split_ratio)] #pas necessaire
     
     ### WRITE YOUR CODE HERE to do any other data processing
     
