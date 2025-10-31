@@ -19,11 +19,3 @@ Developed a machine learning pipeline in Python using a subset of the Stanford D
 - Exploration of different distance metrics and optimization strategies to improve performance and stability
 
 Please refer to `report.pdf` for full details of our work.
-
-## How to Run
-
-Make sure the data is placed in the `dataset/` directory, that need to be created by extracting the dataset.zip file in its current location. And then run the code :
-
-```bash
-python main.py
-```
